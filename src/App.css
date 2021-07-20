@@ -11,7 +11,19 @@
 
 .App-message {
   color: #a6e806;
-  font-size: 50px;
-  border: 2px solid red;
+  font-size: 30px;
 }
 
+.app__form-input{
+   min-height: 30px;
+}
+
+.Message__border{
+  border: 2px solid red;
+  width: 290px;
+}
+
+.app__button{
+  padding: 11px 29px 11px 30px;
+  background-color: #ed7800;
+}
