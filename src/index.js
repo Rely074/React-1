@@ -5,13 +5,17 @@ import './index.css';
 import App from './components/App/App';
 import Router from "./components/Router/Router";
 import reportWebVitals from './reportWebVitals';
+import {Provider} from "react-redux";
+import {store} from "./store";
 
 ReactDOM.render(
   <React.StrictMode>
-      <BrowserRouter>
-          <App />
-          <Router />
-      </BrowserRouter>
+      <Provider store={store}>
+          <BrowserRouter>
+              <App />
+              <Router />
+          </BrowserRouter>
+      </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
