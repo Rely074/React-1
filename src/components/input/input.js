@@ -1,29 +1,36 @@
 import React from "react";
 import {Button, TextField} from "@material-ui/core";
 
-const Authors ={
-    Denis:"Denis",
-    BOT:"Bot",
-}
+// const Authors ={
+//     Denis:"Denis",
+//     BOT:"Bot",
+// }
 
 const Input = (props) => {
-    const {MessageSubmit} = props
-    const [InputValue, setInputValue] = React.useState('')
-    const [messageList, setmessageList] = React.useState([])
+    const {onSubmit} = props
+    const [inputValue, setInputValue] = React.useState('')
 
-    const MessageChange = (e) =>{
+    const messageChange = (e) =>{
         setInputValue(e.target.value)
     }
 
+    const handleSubmit = (e) => {
+        e.preventDefault()
+
+        if (onSubmit) {
+            onSubmit(inputValue)
+            setInputValue('')
+        }
+    }
 
 
     return (
         <div className="Input">
-            <form className="app__form" onSubmit={MessageSubmit}>
+            <form className="app__form" onSubmit={handleSubmit}>
                 <TextField id="standard-secondary" label="Ваше сообщение" color="secondary" autoFocus
-                           className={"app__form-input"} placeholder="Введите сообщение" value={InputValue}
-                           onChange={MessageChange}/>
-                <Button variant="contained" color="primary">Отправить</Button>
+                           className={"app__form-input"} placeholder="Введите сообщение" value={inputValue}
+                           onChange={messageChange}/>
+                <button variant="contained" color="primary">Отправить</button>
             </form>
         </div>
 
