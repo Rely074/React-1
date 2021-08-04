@@ -1,34 +1,43 @@
-import React from "react";
-import { Switch, Route } from 'react-router';
-import { Link } from 'react-router-dom'
-import App from "../App/App";
-import Chat from "../Chat/Chat";
-// import "../Router/index.css"
+import React from 'react'
+import { Switch, Route } from 'react-router'
+import '../App/App.css'
+import Chat from '../Chat/Chat'
+import Home from '../Home'
+import Chats from '../Chats/Chats'
+import Profile from '../Profile/Profile'
+import HomeContainer from '../Home/HomeContainer'
 
 export default function Router() {
     return (
-        <div>
-            <div className="bordered">
-                <Link to="/">Home</Link>
-                <Link to="/chats">Chats</Link>
-                <Link to="/profile">Profile</Link>
-            </div>
+        <Switch>
+            <Route
+                path="/"
+                exact
+                render={() => (
+                    <React.Fragment>
+                        <p>Container</p>
+                        <HomeContainer />
 
-            <Switch>
-                <Route path="/" exact component={App} />
+                        <p>Component</p>
+                        <Home
+                            age={12}
+                            name={'Alice'}
+                            onChangeProfileName={(name) => console.log(name)}
+                        />
+                    </React.Fragment>
+                )}
+            />
 
-                <Route exact path="/chats" render={() => <p>Chats page</p>} />
+            <Route exact path="/chats" component={Chats} />
 
-                <Route path="/chats/:chatId" render={() => <Chat />} />
+            <Route path="/chats/:chatId" component={Chat} />
 
-                <Route path="/profile">
-                    <p>Profile page</p>
-                </Route>
-
-                <Route>
-                    <p>404: not found</p>
-                </Route>
-            </Switch>
-        </div>
+            <Route path="/profile">
+                <Profile />
+            </Route>
+            <Route>
+                <p>404: not found</p>
+            </Route>
+        </Switch>
     )
 }
