@@ -1,55 +1,48 @@
-import React from "react";
-import {TextField} from "@material-ui/core";
-import Input from "../input/input";
-
-
-const Message =(props) => {
-    return <p className={"App-message"}>{props.author}: {props.text}</p>
-}
-
-const Authors ={
-    Denis:"Denis",
-    BOT:"Bot",
-}
-
+import React from 'react'
+import { Redirect, useParams } from 'react-router'
+import Message from '../Message/Message'
+import Input from '../Input/Input'
+import { AUTHORS } from '../App/constants'
+import { useDispatch, useSelector } from 'react-redux'
+import { useIsChatExists } from '../../hooks/useIsChatExists'
+import { sendMessageToBot } from '../../actions/messages'
 
 const Chat = (props) => {
-    const [messageList, setmessageList] = React.useState([])
-    const [InputValue, setInputValue] = React.useState('')
+    const { chatId } = useParams()
+    const messageList = useSelector((state) => state.messages[chatId] || [])
+    const dispatch = useDispatch()
 
-    React.useEffect(()=>{
-        if(messageList.length &&
-            messageList[messageList.length-1].author !== Authors.BOT) {
-            setTimeout(()=>{
-                setmessageList((currentmessageList) =>
-                    [...currentmessageList, {author:Authors.BOT, text:"Я Бот"},
-                    ])
-            },1500)
-        }
-    },[messageList])
-
-    const MessageChange = (e) =>{
-        setInputValue(e.target.value)
+    const handleMessageSubmit = (newMessageText) => {
+        dispatch(
+            sendMessageToBot(chatId, {
+                id: `message${Date.now()}`,
+                author: AUTHORS.ME,
+                text: newMessageText,
+            })
+        )
     }
 
-    const MessageSubmit = (e) => {
-        e.preventDefault()
-        setmessageList((currentmessageList) =>
-            [...currentmessageList, {author:Authors.Denis, text:InputValue},
-            ])
-        setInputValue("")
-    }
+    const isChatExists = useIsChatExists({ chatId })
 
+    if (!isChatExists) {
+        return <Redirect to="/chats" />
+    }
     return (
         <div className="chat">
-            {/*<Message text ={"Chat"}  />*/}
-            <div className={"Message__border"}>
-                {messageList.map((message, index) => (
-                    <Message key={index} text={message.text} author={message.author}/>
-                ))}
-            </div>
-            <Input/>
+            {messageList.length ? (
+                <div className="bordered">
+                    {messageList.map((message) => (
+                        <Message
+                            key={message.id}
+                            text={message.text}
+                            author={message.author}
+                        />
+                    ))}
+                </div>
+            ) : null}
+            <Input onSubmit={handleMessageSubmit} />
         </div>
-)
-};
-export default Chat;
+    )
+}
+
+export default Chat
